@@ -1,6 +1,5 @@
 package com.safar.controller;
 
-
 import com.safar.entity.Driver;
 import com.safar.service.DriverService;
 import jakarta.validation.Valid;
@@ -23,11 +22,9 @@ public class DriverController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-
-
     /*
-
-    {
+      Example JSON:
+      {
         "driverName" : "amank",
         "email" : "amansingh@gmail.com",
         "password" : "aman123",
@@ -42,25 +39,9 @@ public class DriverController {
             "carNumber" : "UP 12 1234",
             "perKmRate" : 10.0
         }
-    }
-
-    "car" : {
-            "carType" : "SUV",
-            "perKmRate" : 10.0,
-            "carNumber" : "1234567890",
-            "carType" : "sedan",
-            "carDescription" : "good"
-        }
-
-
+      }
      */
 
-    /**
-     * Inserts a new driver.
-     *
-     * @param driver The driver details to insert.
-     * @return The inserted driver.
-     */
     @PostMapping("/driver")
     public ResponseEntity<Driver> insertDriverHandler(@Valid @RequestBody Driver driver) {
         driver.setPassword(passwordEncoder.encode(driver.getPassword()));
@@ -68,15 +49,10 @@ public class DriverController {
         return new ResponseEntity<>(insertedDriver, HttpStatus.CREATED);
     }
 
-    /**
-     * Retrieves a list of all drivers.
-     *
-     * @return A list of all drivers.
-     */
     @GetMapping("/drivers")
     public ResponseEntity<List<Driver>> getAllDriversHandler() {
         List<Driver> drivers = driverService.findAllDrivers();
-        return new ResponseEntity<>(drivers, HttpStatus.CREATED);
+        return new ResponseEntity<>(drivers, HttpStatus.CREATED); // Note: Usually 200 OK for GET
     }
 
     @GetMapping("/hello")
@@ -84,78 +60,39 @@ public class DriverController {
         return "Welcome to Spring Security";
     }
 
-    /**
-     * Updates an existing driver's information.
-     *
-     * @param email  The email of the driver to update.
-     * @param driver The updated driver details.
-     * @return The updated driver.
-     */
     @PatchMapping("/driver/{email}")
     public ResponseEntity<Driver> updateDriverHandler(@PathVariable String email, @RequestBody Driver driver) {
         Driver updatedDriver = driverService.updateDriver(email, driver);
-        return new ResponseEntity<>(updatedDriver, HttpStatus.CREATED);
+        return new ResponseEntity<>(updatedDriver, HttpStatus.CREATED); // Note: Usually 200 OK
     }
-
-
 
     /*
-    {
+      Example JSON for update name:
+      {
         "driverName" : "amank",
         "mobileNo" : "1234567880",
-        "address" : "delhi",
-        "rating" : 4.5,
-        "newLocation" : "delhi",
-        "status" : "Available",
-        "car" : {
-            "carType" : "SUV",
-            "perKmRate" : 10.0
-        }
-    }
+        ...
+      }
      */
 
-    /**
-     * Updates the name of a driver by their email.
-     *
-     * @param email The email of the driver to update.
-     * @param name  The new name for the driver.
-     * @return The updated driver.
-     */
     @PatchMapping("/driver/{email}/{name}")
-    public ResponseEntity<Driver> updateDriverHandler(@Valid @PathVariable String email, @PathVariable String name) {
+    public ResponseEntity<Driver> updateDriverNameHandler(@Valid @PathVariable String email, @PathVariable String name) {
         Driver updatedDriver = driverService.changeName(email, name);
-        return new ResponseEntity<>(updatedDriver, HttpStatus.CREATED);
+        return new ResponseEntity<>(updatedDriver, HttpStatus.CREATED); // Note: Usually 200 OK
     }
 
-    /**
-     * Deletes a driver by their email.
-     *
-     * @param driverEmail The email of the driver to delete.
-     * @return A message indicating the result of the deletion.
-     */
     @DeleteMapping("/driver/{driverEmail}")
     public ResponseEntity<String> deleteDriverHandler(@PathVariable String driverEmail) {
         String deletedDriver = driverService.deleteDriver(driverEmail);
         return new ResponseEntity<>(deletedDriver, HttpStatus.ACCEPTED);
     }
 
-    /**
-     * Retrieves a list of the best drivers.
-     *
-     * @return A list of the best drivers.
-     */
     @GetMapping("/driver/bestdrivers")
     public ResponseEntity<List<Driver>> viewBestDriverListHandler() {
         List<Driver> viewBestDrivers = driverService.viewBestDrivers();
         return new ResponseEntity<>(viewBestDrivers, HttpStatus.ACCEPTED);
     }
 
-    /**
-     * Retrieves driver details by their email.
-     *
-     * @param driverEmail The email of the driver to retrieve.
-     * @return The driver's details.
-     */
     @GetMapping("/driver/{driverEmail}")
     public ResponseEntity<Driver> viewDriverByEmailHandler(@PathVariable String driverEmail) {
         Driver viewDriverById = driverService.getDriverDetailsByEmail(driverEmail);
